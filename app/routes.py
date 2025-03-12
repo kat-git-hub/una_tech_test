@@ -7,7 +7,7 @@ from app.models import UsersData
 
 api_bp = Blueprint("api", __name__)
 
-# ✅ Column mapping to ensure correct database insertion
+# Column mapping to ensure correct database insertion
 column_mapping = {
     "Gerät": "Gerät",
     "Seriennummer": "Seriennummer",
@@ -30,7 +30,7 @@ column_mapping = {
     "Insulin-Änderung durch Anwender (Einheiten)": "Insulin_Aenderung_durch_Anwender_Einheiten"
 }
 
-# ✅ Function to Import CSV Files from `/data` (Only New Files)
+# Function to Import CSV Files from `/data` (Only New Files)
 def upload_csv_files():
     data_folder = os.path.join(os.getcwd(), "data")  # Absolute path to /data folder
     csv_files = glob.glob(os.path.join(data_folder, "*.csv"))  # Get all CSV files
@@ -44,7 +44,7 @@ def upload_csv_files():
     for file in csv_files:
         user_id = os.path.splitext(os.path.basename(file))[0]  # Extract user_id from filename
 
-        # ✅ Check if user_id already exists in the database
+        # Check if user_id already exists in the database
         existing_entry = UsersData.query.filter_by(user_id=user_id).first()
         if existing_entry:
             skipped_files.append(file)
@@ -54,16 +54,16 @@ def upload_csv_files():
             reader = csv.reader(f)
             headers = next(reader)  # Read first row as headers
 
-            # ✅ Convert CSV headers to database column names
+            # Convert CSV headers to database column names
             sanitized_headers = [column_mapping.get(col, col).replace(" ", "_").replace("-", "_") for col in headers]
 
-            # ✅ Ensure required columns exist
+            # Ensure required columns exist
             missing_columns = [col for col in column_mapping.keys() if col not in headers]
             if missing_columns:
                 skipped_files.append(file)
                 continue  # Skip files with incorrect structure
 
-            # ✅ Bulk insert data into the database
+            # Bulk insert data into the database
             data = [
                 UsersData(
                     user_id=user_id,
@@ -81,13 +81,13 @@ def upload_csv_files():
         "skipped": len(skipped_files)
     }
 
-# ✅ POST Endpoint to Trigger CSV Upload
+# POST Endpoint to Trigger CSV Upload
 @api_bp.route("/upload", methods=["POST"])
 def upload_csv():
     result = upload_csv_files()
     return jsonify(result)
 
-# ✅ GET ALL GLUCOSE LEVELS (With Filters, Pagination, Sorting)
+# GET ALL GLUCOSE LEVELS (With Filters, Pagination, Sorting)
 @api_bp.route("/levels", methods=["GET"])
 def get_glucose_levels():
     user_id = request.args.get("user_id")
