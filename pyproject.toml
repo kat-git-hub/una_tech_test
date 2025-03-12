@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "una-tech-test"
+version = "0.1.0"
+description = "tech_test"
+authors = ["katiridium"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+flask = "^3.1.0"
+flask-restful = "^0.3.10"
+flake8 = "^7.1.2"
+flask-sqlalchemy = "^3.1.1"
+flask-migrate = "^4.1.0"
+psycopg2 = "^2.9.10"
+pandas = "^2.2.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
